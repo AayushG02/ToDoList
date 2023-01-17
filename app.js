@@ -12,8 +12,13 @@ mongoose.connect('mongodb://127.0.0.1:27017/todolistDB', {
 const itemsSchema = new mongoose.Schema({
     name: String
 });
+const listSchema = new mongoose.Schema({
+    name: String,
+    items: [itemsSchema]
+});
 
 const Item = mongoose.model("Item", itemsSchema);
+const List = mongoose.model("List", listSchema);
 
 const item1 = new Item({
     name: "Welcome to your to do list!"
@@ -50,12 +55,50 @@ app.get('/', (req, res) => {
 
 app.post('/', (req, res) => {
     const newitem = req.body.newItem;
+    const listName = req.body.list;
+    const userItem = new Item({
+        name: newitem
+    })
+
+    if(listName === "Today") {
+        userItem.save();
+        res.redirect('/')
+    } else {
+        List.findOne({name: listName}, (err, foundList)=>{
+            foundList.items.push(item);
+            foundList.save();
+            res.redirect('/' + listName);
+        });
+    }
+
+});
+
+app.get('/:customListName', (req, res)=> {
+    const customlistName = req.params.customListName;
+    List.findOne({name: customlistName}, (err, foundList)=> {
+        if(!err) {
+            if(!foundList) {
+                const list = new List({
+                    name: customlistName,
+                    items: defaultItems
+                });
+                list.save();
+                res.redirect('/' + customlistName);
+            } else {
+                res.render('list', {listTitle: foundList.name, newListItems: foundList.items});
+            }
+        }
+    });
+});
+app.post('/:customListName', (req, res) => {
+    const newitem = req.body.newItem;
     const userItem = new Item({
         name: newitem
     })
     userItem.save();
-    res.redirect('/')
+    res.redirect('/:customListName')
 });
+
 app.post('/delete', (req, res)=> {
     const checkedItem = req.body.deleteItem;
     console.log(checkedItem)

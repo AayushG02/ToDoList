@@ -58,7 +58,7 @@ form.item{
 }
 
 button {
-  min-height: 50px;
+  height: 48px;
   width: 50px;
   border-radius: 50%;
   border-color: transparent;
@@ -67,6 +67,8 @@ button {
   font-size: 30px;
   padding-bottom: 6px;
   border-width: 0;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
 }
 
 input[type="text"] {
@@ -78,6 +80,7 @@ input[type="text"] {
   font-size: 20px;
   font-weight: 200;
   width: 313px;
+  font-family: "Poppins", sans-serif;
 }
 
 input[type="text"]:focus {
