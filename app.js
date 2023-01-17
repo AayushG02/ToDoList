@@ -56,12 +56,12 @@ app.get('/', (req, res) => {
 app.post('/', (req, res) => {
     const newitem = req.body.newItem;
     const listName = req.body.list;
-    const userItem = new Item({
+    const item = new Item({
         name: newitem
     })
 
     if(listName === "Today") {
-        userItem.save();
+        item.save();
         res.redirect('/')
     } else {
         List.findOne({name: listName}, (err, foundList)=>{
@@ -92,10 +92,10 @@ app.get('/:customListName', (req, res)=> {
 });
 app.post('/:customListName', (req, res) => {
     const newitem = req.body.newItem;
-    const userItem = new Item({
+    const item = new Item({
         name: newitem
     })
-    userItem.save();
+    item.save();
     res.redirect('/:customListName')
 });
 
